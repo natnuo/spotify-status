@@ -37,9 +37,9 @@ const redirectToAuth = (redirectUri: string, res: Response) => {
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE  = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE          = "Server error...";
 const DEFAULT_SONG_ARTIST                   = "";
-const DEFAULT_SONG_COVER_URL                = HOSTNAME + "/default_cover.png";
+const DEFAULT_ALBUM_COVER_URL                = HOSTNAME + "/default_cover.png";
 
-const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
+const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(location.reload(), 1000);";
 const TOP_SONGS_EXTRA_SCRIPT                = "";
 
 app.get("/callback", (req, res) => {
@@ -65,7 +65,7 @@ app.get("/currently-playing", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_SONG_COVER_URL,
+                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL,
                             songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
                             songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
                             extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
@@ -76,7 +76,7 @@ app.get("/currently-playing", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            songCoverURL: DEFAULT_SONG_COVER_URL,
+                            albumCoverURL: DEFAULT_ALBUM_COVER_URL,
                             songTitle: CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
                             songArtist: DEFAULT_SONG_ARTIST,
                             extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
@@ -114,7 +114,7 @@ app.get("/top-songs/:ix", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_SONG_COVER_URL,
+                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL,
                             songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : TOP_SONGS_DEFAULT_SONG_TITLE,
                             songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
                             extraScript: TOP_SONGS_EXTRA_SCRIPT,
@@ -125,7 +125,7 @@ app.get("/top-songs/:ix", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            songCoverURL: DEFAULT_SONG_COVER_URL,
+                            albumCoverURL: DEFAULT_ALBUM_COVER_URL,
                             songTitle: TOP_SONGS_DEFAULT_SONG_TITLE,
                             songArtist: DEFAULT_SONG_ARTIST,
                             extraScript: TOP_SONGS_EXTRA_SCRIPT,
