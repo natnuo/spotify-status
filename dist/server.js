@@ -22,8 +22,8 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
 app.use(express_1.default.static(__dirname + "/public"));
 const spotifyApi = new spotify_web_api_node_1.default({
-    clientId: "489bf59cba0a48f7a06ee386920ce727",
-    clientSecret: "c2c5db43c3da4b6a9fbddb02888af728",
+    clientId: "",
+    clientSecret: "",
     redirectUri: "http://localhost:3000/callback",
     // redirectUri: "natnuo.github.io/spotify-data/callback",
 });
