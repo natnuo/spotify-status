@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="88">
+    <foreignObject width="420" height="88">
+        <link rel="stylesheet" href="/css/song.css" />
+        <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous">
+        </script>
+        <div class="cont">
+            <img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273a8f674745d4e6757a9b35ba0" alt=""></img>
+            <div class="song-details">
+                <span class="song-title">Burn</span>
+                <span class="song-artist">Ellie Goulding</span>
+            </div>
+        </div>
+        <span id="ruler"></span>
+        <script type="text/javascript">
+            const visualLength = (s, fontSize, fontWeight) => {
+                return $("#ruler").css("fontSize", fontSize).css("fontWeight", fontWeight).html(s).get(0).offsetWidth;
+            };
+
+            const trimStringToVisualLength = (element, fontSize, fontWeight) => {
+                $(element).toArray().forEach((e) => {
+                    const lengthPixels = e.offsetWidth;
+                    const s = $(e).html();
+                    if (visualLength(s, fontSize) < lengthPixels) return s;
+                
+                    // in the future could do a binary search but kinda lazy rn :)
+                    for (let l = s.length - 3; l > 0; l--) {
+                        const substring = `${s.substring(0, l)}...`;
+                        if (visualLength(substring, fontSize, fontWeight) < lengthPixels) {
+                            $(e).html(substring);
+                            return;
+                        }
+                    }
+                });
+            };
+
+            $(document).ready(() => {
+                trimStringToVisualLength(".song-title", "1rem", "600");
+                trimStringToVisualLength(".song-artist", "0.8rem", "400");
+            });
+
+            {setTimeout(() => { location.reload(); }, 1000);}
+        </script>
+    </foreignObject>
+</svg>

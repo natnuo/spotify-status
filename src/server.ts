@@ -1,7 +1,7 @@
 import express, { Response } from 'express';
 import { engine } from "express-handlebars";
 import SpotifyWebApi from "spotify-web-api-node";
-import { readFile } from "fs/promises"
+import { readFile, writeFile } from "fs/promises"
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,7 +36,22 @@ const redirectToAuth = (redirectUri: string, res: Response) => {
 
 const renderSong = (res: Response, options: any) => {
     res.set("Content-Type", "image/svg");
-    res.render("song.hbs", options);
+    // res.render("song.hbs", options);
+    processSvg("song", options).then((result) => { res.sendFile(result) });
+}
+
+const processSvg = async (name: string, options: { [key: string]: string}) => {
+    let index = await readFile(__dirname + `/views/${name}.svg`, "utf8");
+    
+    for (let prop in options) {
+        if (Object.prototype.hasOwnProperty.call(options, prop)) {
+            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop]);
+        }
+    }
+
+    let new_path = __dirname + "/views/processed.svg";
+    await writeFile(new_path, index);
+    return new_path;
 }
 
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE  = "Not currently playing...";

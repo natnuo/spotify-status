@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_handlebars_1 = require("express-handlebars");
 const spotify_web_api_node_1 = __importDefault(require("spotify-web-api-node"));
+const promises_1 = require("fs/promises");
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.engine("hbs", (0, express_handlebars_1.engine)({ extname: "hbs", defaultLayout: "main", layoutsDir: __dirname + "/views/layouts/" }));
@@ -40,8 +41,20 @@ const redirectToAuth = (redirectUri, res) => {
 };
 const renderSong = (res, options) => {
     res.set("Content-Type", "image/svg");
-    res.render("song.hbs", options);
+    // res.render("song.hbs", options);
+    processSvg("song", options).then((result) => { res.sendFile(result); });
 };
+const processSvg = (name, options) => __awaiter(void 0, void 0, void 0, function* () {
+    let index = yield (0, promises_1.readFile)(__dirname + `/views/${name}.svg`, "utf8");
+    for (let prop in options) {
+        if (Object.prototype.hasOwnProperty.call(options, prop)) {
+            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop]);
+        }
+    }
+    let new_path = __dirname + "/views/processed.svg";
+    yield (0, promises_1.writeFile)(new_path, index);
+    return new_path;
+});
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
