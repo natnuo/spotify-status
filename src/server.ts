@@ -12,10 +12,12 @@ app.set("view engine", "hbs");
 
 app.use(express.static(__dirname + "/public"));
 
+const HOSTNAME = "http://localhost:3000";
+
 const spotifyApi = new SpotifyWebApi({
-    clientId: "",
-    clientSecret: "",
-    redirectUri: "http://localhost:3000/callback",
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: `${HOSTNAME}/currently-playing`,
     // redirectUri: "natnuo.github.io/spotify-data/callback",
 });
 
@@ -84,8 +86,8 @@ const DISPLAY_HEIGHT = 88;
 //     return index;
 // }
 
-const CURRENTLY_PLAYING_REDIRECT_URI = "http://localhost:3000/currently-playing";
-const TOP_SONGS_REDIRECT_URI = "http://localhost:3000/top-songs/";
+const CURRENTLY_PLAYING_REDIRECT_URI = `${HOSTNAME}/currently-playing`;
+const TOP_SONGS_REDIRECT_URI = `${HOSTNAME}/top-songs/`;
 const redirectToAuth = (redirectUri: string, res: Response) => {
     spotifyApi.setRedirectURI(redirectUri);
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, generateRandomString(16));
@@ -200,5 +202,5 @@ app.get("/top-songs/:ix", async (req, res) => {
 });
 
 app.listen(port, () => {
-    return console.log(`Listening at http://localhost:${port}`);
+    return console.log(`Listening at ${HOSTNAME}:${port}`);
 });
