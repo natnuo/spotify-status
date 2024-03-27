@@ -64,10 +64,10 @@ app.get("/currently-playing", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : req.hostname + "/default_cover.png",
-                            songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : TOP_SONGS_DEFAULT_SONG_TITLE,
+                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : HOSTNAME + "/default_cover.png",
+                            songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
                             songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                            extraScript: TOP_SONGS_EXTRA_SCRIPT,
+                            extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
                         });
                     },
                     (err) => {
@@ -113,7 +113,7 @@ app.get("/top-songs/:ix", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : req.hostname + "/default_cover.png",
+                            albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : HOSTNAME + "/default_cover.png",
                             songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : TOP_SONGS_DEFAULT_SONG_TITLE,
                             songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
                             extraScript: TOP_SONGS_EXTRA_SCRIPT,
@@ -124,7 +124,7 @@ app.get("/top-songs/:ix", async (req, res) => {
                         res.render("song.hbs", {
                             width: DISPLAY_WIDTH,
                             height: DISPLAY_HEIGHT,
-                            songCoverURL: req.hostname + "/default_cover.png",
+                            songCoverURL: HOSTNAME + "/default_cover.png",
                             songTitle: TOP_SONGS_DEFAULT_SONG_TITLE,
                             songArtist: DEFAULT_SONG_ARTIST,
                             extraScript: TOP_SONGS_EXTRA_SCRIPT,
