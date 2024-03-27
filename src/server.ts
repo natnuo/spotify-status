@@ -12,7 +12,7 @@ app.set("view engine", "hbs");
 
 app.use(express.static(__dirname + "/public"));
 
-const HOSTNAME = "http://localhost:3000";
+const HOSTNAME = "https://natnuo-spotify-data-bcf8ecc1a8d6.herokuapp.com";
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
