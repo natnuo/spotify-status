@@ -38,6 +38,10 @@ const redirectToAuth = (redirectUri, res) => {
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, generateRandomString(16));
     res.redirect(authorizeURL);
 };
+const renderSong = (res, options) => {
+    res.set("Content-Type", "image/svg");
+    res.render("song.hbs", options);
+};
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
@@ -58,7 +62,7 @@ app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, fu
             spotifyApi.getMyCurrentPlayingTrack().then((data) => {
                 const item = data.body.item;
                 console.log(data);
-                res.render("song.hbs", {
+                renderSong(res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
@@ -68,7 +72,7 @@ app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, fu
                 });
             }, (err) => {
                 console.log("Error when retrieving current track", err);
-                res.render("song.hbs", {
+                renderSong(res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: DEFAULT_ALBUM_COVER_URL,
@@ -97,7 +101,7 @@ app.get("/top-songs/:ix", (req, res) => __awaiter(void 0, void 0, void 0, functi
             spotifyApi.getMyTopTracks().then((data) => {
                 const item = data.body.items[zeroIndexedIx];
                 console.log(data);
-                res.render("song.hbs", {
+                renderSong(res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
@@ -107,7 +111,7 @@ app.get("/top-songs/:ix", (req, res) => __awaiter(void 0, void 0, void 0, functi
                 });
             }, (err) => {
                 console.log("Error when retrieving current track", err);
-                res.render("song.hbs", {
+                renderSong(res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: DEFAULT_ALBUM_COVER_URL,
