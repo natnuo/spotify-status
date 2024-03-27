@@ -21,13 +21,13 @@ app.engine("hbs", (0, express_handlebars_1.engine)({ extname: "hbs", defaultLayo
 app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
 app.use(express_1.default.static(__dirname + "/public"));
-const HOSTNAME = "https://natnuo-spotify-data-bcf8ecc1a8d6.herokuapp.com";
+const HOSTNAME = process.env.HOSTNAME;
 const spotifyApi = new spotify_web_api_node_1.default({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: `${HOSTNAME}/currently-playing`,
 });
-const generateRandomString = (length = 6) => Math.random().toString(20).substring(2, 2 + length);
+const generateRandomString = (length) => Math.random().toString(20).substring(2, 2 + length);
 const scopes = ["user-read-private", "user-read-email", "user-top-read", "user-read-currently-playing"];
 const DISPLAY_WIDTH = 420;
 const DISPLAY_HEIGHT = 88;
@@ -42,7 +42,7 @@ const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
 const DEFAULT_ALBUM_COVER_URL = HOSTNAME + "/default_cover.png";
-const CURRENTLY_PLAYING_EXTRA_SCRIPT = "setTimeout(location.reload, 1000);";
+const CURRENTLY_PLAYING_EXTRA_SCRIPT = "setTimeout(() => { location.reload(); }, 1000);";
 const TOP_SONGS_EXTRA_SCRIPT = "";
 app.get("/callback", (req, res) => {
     console.log(req.query);

@@ -20,7 +20,7 @@ const spotifyApi = new SpotifyWebApi({
     redirectUri: `${HOSTNAME}/currently-playing`,
 });
 
-const generateRandomString = (length=6)=>Math.random().toString(20).substring(2, 2+length)
+const generateRandomString = (length: number)=>Math.random().toString(20).substring(2, 2+length)
 const scopes = ["user-read-private", "user-read-email", "user-top-read", "user-read-currently-playing"];
 
 const DISPLAY_WIDTH = 420;
@@ -37,9 +37,9 @@ const redirectToAuth = (redirectUri: string, res: Response) => {
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE  = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE          = "Server error...";
 const DEFAULT_SONG_ARTIST                   = "";
-const DEFAULT_ALBUM_COVER_URL                = HOSTNAME + "/default_cover.png";
+const DEFAULT_ALBUM_COVER_URL               = HOSTNAME + "/default_cover.png";
 
-const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(location.reload, 1000);";
+const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
 const TOP_SONGS_EXTRA_SCRIPT                = "";
 
 app.get("/callback", (req, res) => {
