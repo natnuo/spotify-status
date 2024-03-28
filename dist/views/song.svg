@@ -1,34 +1,91 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}">
-    <foreignObject width="{{ width }}" height="{{ height }}">
-        <link rel="stylesheet" href="/css/song.css" />
-        <script
-            src="https://code.jquery.com/jquery-3.7.1.js"
-            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-            crossorigin="anonymous">
-        </script>
-        <div class="cont">
-            <img class="album-cover" src="{{ albumCoverURL }}" alt=""></img>
-            <div class="song-details">
-                <span class="song-title">{{ songTitle }}</span>
-                <span class="song-artist">{{ songArtist }}</span>
-            </div>
-        </div>
-        <span id="ruler"></span>
-        <script type="text/javascript">
-            const visualLength = (s, fontSize, fontWeight) => {
-                return $("#ruler").css("fontSize", fontSize).css("fontWeight", fontWeight).html(s).get(0).offsetWidth;
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="{{ width }}" height="{{ height }}" version="1.1">
+    <foreignObject x="0" y="0" width="{{ width }}" height="{{ height }}">
+    <xhtml:style type="text/css">
+    <![CDATA[
+svg:root {
+    background-color: black;
+    margin: 0;
+}
+
+.cont {
+    --p: 1rem;
+
+    display: flex;
+    align-items: center;
+
+    width: calc({{ width }}px - 2 * var(--p));
+    height: calc({{ height }}px - 2 * var(--p));
+
+    padding: var(--p);
+}
+
+.album-cover {
+    height: 100%;
+    border-radius: 2px;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+
+    flex: 1;
+
+    margin-left: var(--p);
+}
+
+span {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.song-title {
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    width: 100%;
+    color: #f5f5f5;
+}
+.song-artist {
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    width: 100%;
+    color: #eeeeee;
+}
+
+#ruler {
+    font-size: 1rem;
+    font-weight: 400;
+}
+    ]]>
+        </xhtml:style>
+        <xhtml:div class="cont">
+            <xhtml:img class="album-cover" src="{{ albumCoverURL }}" alt=""></xhtml:img>
+            <xhtml:div class="song-details">
+                <xhtml:span class="song-title">{{ songTitle }}</xhtml:span>
+                <xhtml:span class="song-artist">{{ songArtist }}</xhtml:span>
+            </xhtml:div>
+        </xhtml:div>
+        <xhtml:span id="ruler"></xhtml:span>
+        <xhtml:script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></xhtml:script>
+        <xhtml:script type="text/javascript">
+            const visualLength = (s, fontSize, fontWeight) =&gt; {
+                document.getElementById("ruler").style.fontSize = fontSize;
+                document.getElementById("ruler").style.fontWeight = fontWeight;
+                return $("#ruler").html(s).get(0).offsetWidth;
             };
 
-            const trimStringToVisualLength = (element, fontSize, fontWeight) => {
-                $(element).toArray().forEach((e) => {
+            const trimStringToVisualLength = (element, fontSize, fontWeight) =&gt; {
+                $(element).toArray().forEach((e) =&gt; {
                     const lengthPixels = e.offsetWidth;
                     const s = $(e).html();
-                    if (visualLength(s, fontSize) < lengthPixels) return s;
+                    if (visualLength(s, fontSize, fontWeight) &lt; lengthPixels) return s;
                 
-                    // in the future could do a binary search but kinda lazy rn :)
-                    for (let l = s.length - 3; l > 0; l--) {
+                    // in the future could do a binary search but kinda lazy rn :&gt;
+                    for (let l = s.length - 3; l &gt; 0; l--) {
                         const substring = `${s.substring(0, l)}...`;
-                        if (visualLength(substring, fontSize, fontWeight) < lengthPixels) {
+                        if (visualLength(substring, fontSize, fontWeight) &lt; lengthPixels) {
                             $(e).html(substring);
                             return;
                         }
@@ -36,12 +93,12 @@
                 });
             };
 
-            $(document).ready(() => {
+            $(document).ready(() =&gt; {
                 trimStringToVisualLength(".song-title", "1rem", "600");
                 trimStringToVisualLength(".song-artist", "0.8rem", "400");
             });
 
             {{ extraScript }}
-        </script>
+        </xhtml:script>
     </foreignObject>
 </svg>

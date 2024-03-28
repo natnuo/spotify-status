@@ -1,5 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="{{ width }}" height="{{ height }}">
     <foreignObject width="{{ width }}" height="{{ height }}">
+        <style type="text/css">
+    <![CDATA[
+svg:root {
+    background-color: black;
+    margin: 0;
+}
+
+.cont {
+    --p: 1rem;
+
+    display: flex;
+    align-items: center;
+
+    height: calc(100% - 2 * var(--p));
+    width: calc(100% - 2 * var(--p));
+
+    padding: var(--p);
+}
+
+.album-cover {
+    height: 100%;
+    border-radius: 2px;
+}
+
+.song-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+
+    flex: 1;
+
+    margin-left: var(--p);
+}
+
+span {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.song-title {
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    width: 100%;
+    color: #f5f5f5;
+}
+.song-artist {
+    font-size: 0.8rem;
+    line-height: 0.8rem;
+    width: 100%;
+    color: #eeeeee;
+}
+    ]]>
+        </style>
         <link rel="stylesheet" href="/css/song.css" />
         <script
             src="https://code.jquery.com/jquery-3.7.1.js"
@@ -23,7 +78,7 @@
                 $(element).toArray().forEach((e) => {
                     const lengthPixels = e.offsetWidth;
                     const s = $(e).html();
-                    if (visualLength(s, fontSize) < lengthPixels) return s;
+                    if (visualLength(s, fontSize, fontWeight) < lengthPixels) return s;
                 
                     // in the future could do a binary search but kinda lazy rn :)
                     for (let l = s.length - 3; l > 0; l--) {

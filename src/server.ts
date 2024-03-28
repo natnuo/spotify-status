@@ -35,7 +35,7 @@ const redirectToAuth = (redirectUri: string, res: Response) => {
 }
 
 const renderSong = (res: Response, options: any) => {
-    res.set("Content-Type", "text/svg");
+    res.set("Content-Type", "image/svg+xml");
     // res.render("song.hbs", options);
     processSvg("song", options).then((result) => { res.sendFile(result) });
 }
