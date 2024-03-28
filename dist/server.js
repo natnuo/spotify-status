@@ -40,7 +40,7 @@ const redirectToAuth = (redirectUri, res) => {
     res.redirect(authorizeURL);
 };
 const renderSong = (res, options) => {
-    res.set("Content-Type", "image/svg");
+    res.set("Content-Type", "text/svg");
     // res.render("song.hbs", options);
     processSvg("song", options).then((result) => { res.sendFile(result); });
 };
