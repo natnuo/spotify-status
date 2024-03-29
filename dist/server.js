@@ -34,6 +34,7 @@ const DISPLAY_WIDTH = 420;
 const DISPLAY_HEIGHT = 88;
 const CURRENTLY_PLAYING_REDIRECT_URI = `${HOSTNAME}/currently-playing`;
 const TOP_SONGS_REDIRECT_URI = `${HOSTNAME}/top-songs/`;
+const CALLBACK_REDIRECT_URI = `${HOSTNAME}/callback`;
 const redirectToAuth = (redirectUri, res) => {
     spotifyApi.setRedirectURI(redirectUri);
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, generateRandomString(16));
@@ -59,48 +60,59 @@ const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
 const DEFAULT_ALBUM_COVER_URL = HOSTNAME + "/default_cover.png";
+// const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
 const CURRENTLY_PLAYING_EXTRA_SCRIPT = "";
 const TOP_SONGS_EXTRA_SCRIPT = "";
+let timeout = undefined;
 app.get("/callback", (req, res) => {
-    console.log(req.query);
-    res.send("");
-});
-app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.query.code) {
-        spotifyApi.setRedirectURI(CURRENTLY_PLAYING_REDIRECT_URI);
+    if (req.query) {
         spotifyApi.authorizationCodeGrant(req.query.code).then((data) => {
             console.log(data.body);
             spotifyApi.setAccessToken(data.body.access_token);
             spotifyApi.setRefreshToken(data.body.refresh_token);
-            spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-                const item = data.body.item;
-                console.log(data);
-                renderSong(res, {
-                    width: DISPLAY_WIDTH,
-                    height: DISPLAY_HEIGHT,
-                    albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
-                    songTitle: item ? item.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
-                    songArtist: item ? item.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                    extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+            if (timeout)
+                clearInterval(timeout);
+            timeout = setInterval(() => {
+                spotifyApi.refreshAccessToken().then((data) => {
+                    spotifyApi.setAccessToken(data.body.access_token);
+                }, (err) => {
+                    console.log("sdfjsd", err);
+                    redirectToAuth(CALLBACK_REDIRECT_URI, res);
                 });
-            }, (err) => {
-                console.log("Error when retrieving current track", err);
-                renderSong(res, {
-                    width: DISPLAY_WIDTH,
-                    height: DISPLAY_HEIGHT,
-                    albumCoverURL: DEFAULT_ALBUM_COVER_URL,
-                    songTitle: CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
-                    songArtist: DEFAULT_SONG_ARTIST,
-                    extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
-                });
-            });
+            }, 59 * 60 * 1000);
+            res.send("");
         }, (err) => {
-            redirectToAuth(CURRENTLY_PLAYING_REDIRECT_URI, res);
+            console.log("aasddd", err);
+            redirectToAuth(CALLBACK_REDIRECT_URI, res);
         });
     }
-    else {
-        redirectToAuth(CURRENTLY_PLAYING_REDIRECT_URI, res);
-    }
+});
+app.get("/auth", (req, res) => {
+    redirectToAuth(CALLBACK_REDIRECT_URI, res);
+});
+app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+        const item = data.body.item;
+        console.log(data);
+        renderSong(res, {
+            width: DISPLAY_WIDTH,
+            height: DISPLAY_HEIGHT,
+            albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
+            songTitle: item ? item.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+            songArtist: item ? item.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+            extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+        });
+    }, (err) => {
+        console.log("Error when retrieving current track", err);
+        renderSong(res, {
+            width: DISPLAY_WIDTH,
+            height: DISPLAY_HEIGHT,
+            albumCoverURL: DEFAULT_ALBUM_COVER_URL,
+            songTitle: CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+            songArtist: DEFAULT_SONG_ARTIST,
+            extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+        });
+    });
 }));
 // ix is not zero-indexed; the lowest valid ix is 1
 app.get("/top-songs/:ix", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

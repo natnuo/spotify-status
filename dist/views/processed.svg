@@ -20,8 +20,10 @@ svg:root {
 }
 
 .album-cover {
-    height: 100%;
+    height: calc(88px - 2 * var(--p));
+    width: calc(88px - 2 * var(--p)); /* 88 is intentional */
     border-radius: 2px;
+    background-color: white;
 }
 
 .song-details {
@@ -61,10 +63,10 @@ span {
     ]]>
         </xhtml:style>
         <xhtml:div class="cont">
-            <xhtml:img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273fc915b69600dce2991a61f13" alt=""></xhtml:img>
+            <xhtml:img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b273754b2fddebe7039fdb912837" alt=""></xhtml:img>
             <xhtml:div class="song-details">
-                <xhtml:span class="song-title">Enemy (with JID) - from the series Arcane League of Legends</xhtml:span>
-                <xhtml:span class="song-artist">Imagine Dragons, JID, Arcane, League of Legends</xhtml:span>
+                <xhtml:span class="song-title">The Greatest</xhtml:span>
+                <xhtml:span class="song-artist">Sia</xhtml:span>
             </xhtml:div>
         </xhtml:div>
         <xhtml:span id="ruler"></xhtml:span>
