@@ -119,7 +119,7 @@ app.get("/currently-playing", async (req, res) => {
         },
         (err) => {
             console.log("Error when retrieving current track", err);
-            window.location.href = AUTH_URI;
+            res.redirect(AUTH_URI);
         }
     );
 });
@@ -143,7 +143,7 @@ app.get("/top-songs/:ix", async (req, res) => {
         },
         (err) => {
             console.log("Error when retrieving current track", err);
-            window.location.href = AUTH_URI;
+            res.redirect(AUTH_URI);
         }
     );
 });

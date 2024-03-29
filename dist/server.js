@@ -35,6 +35,7 @@ const DISPLAY_HEIGHT = 88;
 const CURRENTLY_PLAYING_REDIRECT_URI = `${HOSTNAME}/currently-playing`;
 const TOP_SONGS_REDIRECT_URI = `${HOSTNAME}/top-songs/`;
 const CALLBACK_REDIRECT_URI = `${HOSTNAME}/callback`;
+const AUTH_URI = `${HOSTNAME}/auth`;
 const redirectToAuth = (redirectUri, res) => {
     spotifyApi.setRedirectURI(redirectUri);
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, generateRandomString(16));
@@ -104,54 +105,27 @@ app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, fu
         });
     }, (err) => {
         console.log("Error when retrieving current track", err);
-        renderSong(res, {
-            width: DISPLAY_WIDTH,
-            height: DISPLAY_HEIGHT,
-            albumCoverURL: DEFAULT_ALBUM_COVER_URL,
-            songTitle: CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
-            songArtist: DEFAULT_SONG_ARTIST,
-            extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
-        });
+        res.redirect(AUTH_URI);
     });
 }));
 // ix is not zero-indexed; the lowest valid ix is 1
 app.get("/top-songs/:ix", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req.query.code) {
-        spotifyApi.setRedirectURI(TOP_SONGS_REDIRECT_URI + req.params.ix);
-        spotifyApi.authorizationCodeGrant(req.query.code).then((data) => {
-            console.log(data.body);
-            spotifyApi.setAccessToken(data.body.access_token);
-            spotifyApi.setRefreshToken(data.body.refresh_token);
-            const zeroIndexedIx = parseInt(req.params.ix) - 1;
-            spotifyApi.getMyTopTracks().then((data) => {
-                const item = data.body.items[zeroIndexedIx];
-                console.log(data);
-                renderSong(res, {
-                    width: DISPLAY_WIDTH,
-                    height: DISPLAY_HEIGHT,
-                    albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
-                    songTitle: item ? item.name : TOP_SONGS_DEFAULT_SONG_TITLE,
-                    songArtist: item ? item.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                    extraScript: TOP_SONGS_EXTRA_SCRIPT,
-                });
-            }, (err) => {
-                console.log("Error when retrieving current track", err);
-                renderSong(res, {
-                    width: DISPLAY_WIDTH,
-                    height: DISPLAY_HEIGHT,
-                    albumCoverURL: DEFAULT_ALBUM_COVER_URL,
-                    songTitle: TOP_SONGS_DEFAULT_SONG_TITLE,
-                    songArtist: DEFAULT_SONG_ARTIST,
-                    extraScript: TOP_SONGS_EXTRA_SCRIPT,
-                });
-            });
-        }, (err) => {
-            redirectToAuth(TOP_SONGS_REDIRECT_URI + req.params.ix, res);
+    spotifyApi.getMyTopTracks().then((data) => {
+        const zeroIndexedIx = parseInt(req.params.ix) - 1;
+        const item = data.body.items[zeroIndexedIx];
+        console.log(data);
+        renderSong(res, {
+            width: DISPLAY_WIDTH,
+            height: DISPLAY_HEIGHT,
+            albumCoverURL: item ? item.album.images[0].url : DEFAULT_ALBUM_COVER_URL,
+            songTitle: item ? item.name : TOP_SONGS_DEFAULT_SONG_TITLE,
+            songArtist: item ? item.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+            extraScript: TOP_SONGS_EXTRA_SCRIPT,
         });
-    }
-    else {
-        redirectToAuth(TOP_SONGS_REDIRECT_URI + req.params.ix, res);
-    }
+    }, (err) => {
+        console.log("Error when retrieving current track", err);
+        res.redirect(AUTH_URI);
+    });
 }));
 app.listen(port, () => {
     return console.log(`Listening at ${HOSTNAME}:${port}`);
