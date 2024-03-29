@@ -29,6 +29,7 @@ const DISPLAY_HEIGHT = 88;
 const CURRENTLY_PLAYING_REDIRECT_URI = `${HOSTNAME}/currently-playing`;
 const TOP_SONGS_REDIRECT_URI = `${HOSTNAME}/top-songs/`;
 const CALLBACK_REDIRECT_URI = `${HOSTNAME}/callback`;
+const AUTH_URI = `${HOSTNAME}/auth`;
 
 const redirectToAuth = (redirectUri: string, res: Response) => {
     spotifyApi.setRedirectURI(redirectUri);
@@ -118,14 +119,7 @@ app.get("/currently-playing", async (req, res) => {
         },
         (err) => {
             console.log("Error when retrieving current track", err);
-            renderSong(res, {
-                width: DISPLAY_WIDTH,
-                height: DISPLAY_HEIGHT,
-                albumCoverURL: DEFAULT_ALBUM_COVER_URL,
-                songTitle: CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
-                songArtist: DEFAULT_SONG_ARTIST,
-                extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
-            });
+            window.location.href = AUTH_URI;
         }
     );
 });
@@ -149,14 +143,7 @@ app.get("/top-songs/:ix", async (req, res) => {
         },
         (err) => {
             console.log("Error when retrieving current track", err);
-            renderSong(res, {
-                width: DISPLAY_WIDTH,
-                height: DISPLAY_HEIGHT,
-                albumCoverURL: DEFAULT_ALBUM_COVER_URL,
-                songTitle: TOP_SONGS_DEFAULT_SONG_TITLE,
-                songArtist: DEFAULT_SONG_ARTIST,
-                extraScript: TOP_SONGS_EXTRA_SCRIPT,
-            });
+            window.location.href = AUTH_URI;
         }
     );
 });
