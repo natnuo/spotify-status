@@ -2,6 +2,7 @@ import express, { Response } from 'express';
 import { engine } from "express-handlebars";
 import SpotifyWebApi from "spotify-web-api-node";
 import { readFile, writeFile } from "fs/promises"
+import axios from "axios";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -107,14 +108,17 @@ app.get("/currently-playing", async (req, res) => {
         (data) => {
             const item = data.body.item;
 
-            console.log(data);
-            renderSong(res, {
-                width: DISPLAY_WIDTH,
-                height: DISPLAY_HEIGHT,
-                albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL,
-                songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
-                songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+            axios.get(item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
+                const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
+
+                renderSong(res, {
+                    width: DISPLAY_WIDTH,
+                    height: DISPLAY_HEIGHT,
+                    albumCoverURL: albumCover,
+                    songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+                    songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+                    extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+                });
             });
         },
         (err) => {
@@ -131,14 +135,17 @@ app.get("/top-songs/:ix", async (req, res) => {
             const zeroIndexedIx = parseInt(req.params.ix) - 1;
             const item = data.body.items[zeroIndexedIx];
 
-            console.log(data);
-            renderSong(res, {
-                width: DISPLAY_WIDTH,
-                height: DISPLAY_HEIGHT,
-                albumCoverURL: item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL,
-                songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : TOP_SONGS_DEFAULT_SONG_TITLE,
-                songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                extraScript: TOP_SONGS_EXTRA_SCRIPT,
+            axios.get(item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
+                const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
+
+                renderSong(res, {
+                    width: DISPLAY_WIDTH,
+                    height: DISPLAY_HEIGHT,
+                    albumCoverURL: albumCover,
+                    songTitle: item ? (<SpotifyApi.TrackObjectFull>item).name : TOP_SONGS_DEFAULT_SONG_TITLE,
+                    songArtist: item ? (<SpotifyApi.TrackObjectFull>item).artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+                    extraScript: TOP_SONGS_EXTRA_SCRIPT,
+                });
             });
         },
         (err) => {

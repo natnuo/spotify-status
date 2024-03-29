@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@types/express-handlebars": "^6.0.0",
+    "axios": "^1.6.8",
     "express": "^4.19.2",
     "express-handlebars": "^7.1.2",
     "hbs": "^4.2.0",
