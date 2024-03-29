@@ -20,7 +20,7 @@ svg:root {
 }
 
 .album-cover {
-    height: 100%;
+    width: calc({{ height }}px - 2 * var(--p)); /* {{ height }} is intentional */
     border-radius: 2px;
 }
 
