@@ -62,8 +62,8 @@ const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
 const DEFAULT_ALBUM_COVER_URL = HOSTNAME + "/default_cover.png";
-// const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
-const CURRENTLY_PLAYING_EXTRA_SCRIPT = "";
+const CURRENTLY_PLAYING_EXTRA_SCRIPT = "setTimeout(() => { location.reload(); }, 1000);";
+// const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "";
 const TOP_SONGS_EXTRA_SCRIPT = "";
 let timeout = undefined;
 app.get("/callback", (req, res) => {
