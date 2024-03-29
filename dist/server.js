@@ -50,7 +50,7 @@ const processSvg = (name, options) => __awaiter(void 0, void 0, void 0, function
     let index = yield (0, promises_1.readFile)(__dirname + `/views/${name}.svg`, "utf8");
     for (let prop in options) {
         if (Object.prototype.hasOwnProperty.call(options, prop)) {
-            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop]);
+            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop].toString().replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;"));
         }
     }
     let new_path = __dirname + "/views/processed.svg";
@@ -80,8 +80,8 @@ app.get("/callback", (req, res) => {
                     console.log("sdfjsd", err);
                     redirectToAuth(CALLBACK_REDIRECT_URI, res);
                 });
-            }, 59 * 60 * 1000);
-            res.send("");
+            }, 30 * 60 * 1000);
+            res.redirect(HOSTNAME);
         }, (err) => {
             console.log("aasddd", err);
             redirectToAuth(CALLBACK_REDIRECT_URI, res);

@@ -24,7 +24,7 @@ svg:root {
     width: calc(88px - 2 * var(--p)); /* 88 is intentional */
     border-radius: 2px;
     background-color: white;
-    background-image: url(https://i.scdn.co/image/ab67616d0000b273a8f674745d4e6757a9b35ba0);
+    background-image: url(https://i.scdn.co/image/ab67616d0000b2737a3fbbab0e9fb050a08fa065);
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -69,8 +69,8 @@ span {
         <xhtml:div class="cont">
             <xhtml:div class="album-cover"></xhtml:div>
             <xhtml:div class="song-details">
-                <xhtml:span class="song-title">Burn</xhtml:span>
-                <xhtml:span class="song-artist">Ellie Goulding</xhtml:span>
+                <xhtml:span class="song-title">Home (with Machine Gun Kelly, X Ambassadors &amp; Bebe Rexha)</xhtml:span>
+                <xhtml:span class="song-artist">mgk, X Ambassadors, Bebe Rexha</xhtml:span>
             </xhtml:div>
         </xhtml:div>
         <xhtml:span id="ruler"></xhtml:span>

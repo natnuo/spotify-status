@@ -12,7 +12,7 @@ app.set("view engine", "hbs");
 
 app.use(express.static(__dirname + "/public"));
 
-const HOSTNAME = process.env.HOSTNAME;
+const HOSTNAME = <string>process.env.HOSTNAME;
 
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
@@ -43,12 +43,12 @@ const renderSong = (res: Response, options: any) => {
     processSvg("song", options).then((result) => { res.sendFile(result) });
 }
 
-const processSvg = async (name: string, options: { [key: string]: string}) => {
+const processSvg = async (name: string, options: { [key: string]: number | string}) => {
     let index = await readFile(__dirname + `/views/${name}.svg`, "utf8");
     
     for (let prop in options) {
         if (Object.prototype.hasOwnProperty.call(options, prop)) {
-            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop]);
+            index = index.replace(new RegExp(`{{ *${prop} *}}`, "g"), options[prop].toString().replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;"));
         }
     }
 
@@ -87,8 +87,8 @@ app.get("/callback", (req, res) => {
                             redirectToAuth(CALLBACK_REDIRECT_URI, res);
                         }
                     )
-                }, 59*60*1000);
-                res.send("");
+                }, 30*60*1000);
+                res.redirect(HOSTNAME);
             },
             (err) => {
                 console.log("aasddd", err);
