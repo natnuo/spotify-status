@@ -25,6 +25,9 @@ svg:root {
     border-radius: 2px;
     background-color: white;
     background-image: url({{ albumCoverURL }});
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .song-details {

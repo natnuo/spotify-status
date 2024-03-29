@@ -24,7 +24,10 @@ svg:root {
     width: calc(88px - 2 * var(--p)); /* 88 is intentional */
     border-radius: 2px;
     background-color: white;
-    background-image: url(http://localhost:3000/default_cover.png);
+    background-image: url(https://i.scdn.co/image/ab67616d0000b273a8f674745d4e6757a9b35ba0);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .song-details {
@@ -66,8 +69,8 @@ span {
         <xhtml:div class="cont">
             <xhtml:div class="album-cover"></xhtml:div>
             <xhtml:div class="song-details">
-                <xhtml:span class="song-title">Not currently playing...</xhtml:span>
-                <xhtml:span class="song-artist"></xhtml:span>
+                <xhtml:span class="song-title">Burn</xhtml:span>
+                <xhtml:span class="song-artist">Ellie Goulding</xhtml:span>
             </xhtml:div>
         </xhtml:div>
         <xhtml:span id="ruler"></xhtml:span>
