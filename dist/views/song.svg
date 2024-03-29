@@ -24,6 +24,7 @@ svg:root {
     width: calc({{ height }}px - 2 * var(--p)); /* {{ height }} is intentional */
     border-radius: 2px;
     background-color: white;
+    background-image: url({{ albumCoverURL }});
 }
 
 .song-details {
@@ -63,7 +64,7 @@ span {
     ]]>
         </xhtml:style>
         <xhtml:div class="cont">
-            <xhtml:img class="album-cover" src="{{ albumCoverURL }}" alt=""></xhtml:img>
+            <xhtml:div class="album-cover"></xhtml:div>
             <xhtml:div class="song-details">
                 <xhtml:span class="song-title">{{ songTitle }}</xhtml:span>
                 <xhtml:span class="song-artist">{{ songArtist }}</xhtml:span>

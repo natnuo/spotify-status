@@ -24,6 +24,7 @@ svg:root {
     width: calc(88px - 2 * var(--p)); /* 88 is intentional */
     border-radius: 2px;
     background-color: white;
+    background-image: url(http://localhost:3000/default_cover.png);
 }
 
 .song-details {
@@ -63,10 +64,10 @@ span {
     ]]>
         </xhtml:style>
         <xhtml:div class="cont">
-            <xhtml:img class="album-cover" src="https://i.scdn.co/image/ab67616d0000b2737a3fbbab0e9fb050a08fa065" alt=""></xhtml:img>
+            <xhtml:div class="album-cover"></xhtml:div>
             <xhtml:div class="song-details">
-                <xhtml:span class="song-title">Home (with Machine Gun Kelly, X Ambassadors & Bebe Rexha)</xhtml:span>
-                <xhtml:span class="song-artist">mgk, X Ambassadors, Bebe Rexha</xhtml:span>
+                <xhtml:span class="song-title">Not currently playing...</xhtml:span>
+                <xhtml:span class="song-artist"></xhtml:span>
             </xhtml:div>
         </xhtml:div>
         <xhtml:span id="ruler"></xhtml:span>
