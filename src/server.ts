@@ -129,6 +129,34 @@ app.get("/currently-playing", async (req, res) => {
 });
 
 // ix is not zero-indexed; the lowest valid ix is 1
+app.get("/playlist/:playlistID/:ix", async (req, res) => {
+    spotifyApi.getPlaylist(req.params.playlistID).then(
+        (data) => {
+            const ix = parseInt(req.params.ix)-1;
+            const item = data.body.tracks.items.length > ix ? data.body.tracks.items[ix] : null;
+            const track = item ? item.track : null;
+
+            axios.get(track ? track.album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
+                const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
+
+                renderSong(res, {
+                    width: DISPLAY_WIDTH,
+                    height: DISPLAY_HEIGHT,
+                    albumCoverURL: albumCover,
+                    songTitle: track ? track.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+                    songArtist: track ? track.artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+                    extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+                });
+            });
+        },
+        (err) => {
+            console.log("Error when retrieving current track", err);
+            res.redirect(AUTH_URI);
+        }
+    );
+});
+
+// ix is not zero-indexed; the lowest valid ix is 1
 app.get("/top-songs/:ix", async (req, res) => {
     spotifyApi.getMyTopTracks().then(
         (data) => {

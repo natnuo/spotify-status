@@ -62,8 +62,8 @@ const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE = "Not currently playing...";
 const TOP_SONGS_DEFAULT_SONG_TITLE = "Server error...";
 const DEFAULT_SONG_ARTIST = "";
 const DEFAULT_ALBUM_COVER_URL = HOSTNAME + "/default_cover.png";
-const CURRENTLY_PLAYING_EXTRA_SCRIPT = "setTimeout(() => { location.reload(); }, 1000);";
-// const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "";
+// const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
+const CURRENTLY_PLAYING_EXTRA_SCRIPT = "";
 const TOP_SONGS_EXTRA_SCRIPT = "";
 let timeout = undefined;
 app.get("/callback", (req, res) => {
@@ -103,6 +103,28 @@ app.get("/currently-playing", (req, res) => __awaiter(void 0, void 0, void 0, fu
                 albumCoverURL: albumCover,
                 songTitle: item ? item.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
                 songArtist: item ? item.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
+                extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+            });
+        });
+    }, (err) => {
+        console.log("Error when retrieving current track", err);
+        res.redirect(AUTH_URI);
+    });
+}));
+// ix is not zero-indexed; the lowest valid ix is 1
+app.get("/playlist/:playlistID/:ix", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    spotifyApi.getPlaylist(req.params.playlistID).then((data) => {
+        const ix = parseInt(req.params.ix) - 1;
+        const item = data.body.tracks.items.length > ix ? data.body.tracks.items[ix] : null;
+        const track = item ? item.track : null;
+        axios_1.default.get(track ? track.album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
+            const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
+            renderSong(res, {
+                width: DISPLAY_WIDTH,
+                height: DISPLAY_HEIGHT,
+                albumCoverURL: albumCover,
+                songTitle: track ? track.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+                songArtist: track ? track.artists.map((artist) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
                 extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
             });
         });
