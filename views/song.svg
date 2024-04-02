@@ -3,7 +3,7 @@
     <xhtml:style type="text/css">
     <![CDATA[
 svg:root {
-    background-color: black;
+    background-color: transparent;
     margin: 0;
 }
 

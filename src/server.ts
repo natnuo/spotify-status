@@ -60,12 +60,14 @@ const processSvg = async (name: string, options: { [key: string]: number | strin
 }
 
 const CURRENTLY_PLAYING_DEFAULT_SONG_TITLE  = "Not currently playing...";
+const PLAYLIST_DEFAULT_SONG_TITLE           = "Track unavailable...";
 const TOP_SONGS_DEFAULT_SONG_TITLE          = "Server error...";
 const DEFAULT_SONG_ARTIST                   = "";
 const DEFAULT_ALBUM_COVER_URL               = HOSTNAME + "/default_cover.png";
 
 // const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "setTimeout(() => { location.reload(); }, 1000);";
 const CURRENTLY_PLAYING_EXTRA_SCRIPT        = "";
+const PLAYLIST_EXTRA_SCRIPT                 = "";
 const TOP_SONGS_EXTRA_SCRIPT                = "";
 
 let timeout: NodeJS.Timeout | undefined = undefined;
@@ -144,9 +146,9 @@ app.get("/playlist/:playlistID/:ix", async (req, res) => {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: albumCover,
-                    songTitle: track ? track.name : CURRENTLY_PLAYING_DEFAULT_SONG_TITLE,
+                    songTitle: track ? track.name : PLAYLIST_DEFAULT_SONG_TITLE,
                     songArtist: track ? track.artists.map((artist: any) => { return artist.name; }).join(", ") : DEFAULT_SONG_ARTIST,
-                    extraScript: CURRENTLY_PLAYING_EXTRA_SCRIPT,
+                    extraScript: PLAYLIST_EXTRA_SCRIPT,
                 });
             });
         },
