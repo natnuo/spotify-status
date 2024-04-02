@@ -3,15 +3,16 @@ import { engine } from "express-handlebars";
 import SpotifyWebApi from "spotify-web-api-node";
 import { readFile, writeFile } from "fs/promises"
 import axios from "axios";
+import path from "path";
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.engine("hbs", engine({ extname: "hbs", defaultLayout: "main", layoutsDir: __dirname + "/views/layouts/" }));
-app.set("views", __dirname + "/views");
+app.engine("hbs", engine({ extname: "hbs", defaultLayout: "main", layoutsDir: path.resolve(__dirname + "/../views/layouts/") }));
+app.set("views", path.resolve(__dirname + "/../views"));
 app.set("view engine", "hbs");
 
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(path.resolve(__dirname + "/../public")));
 
 const HOSTNAME = <string>process.env.HOSTNAME;
 
@@ -45,7 +46,7 @@ const renderSong = (res: Response, options: any) => {
 }
 
 const processSvg = async (name: string, options: { [key: string]: number | string}) => {
-    let index = await readFile(__dirname + `/views/${name}.svg`, "utf8");
+    let index = await readFile(path.resolve(__dirname + `/../views/${name}.svg`), "utf8");
     
     for (let prop in options) {
         if (Object.prototype.hasOwnProperty.call(options, prop)) {
@@ -53,7 +54,7 @@ const processSvg = async (name: string, options: { [key: string]: number | strin
         }
     }
 
-    let new_path = __dirname + "/views/processed.svg";
+    let new_path = path.resolve(__dirname + "/../views/processed.svg");
     await writeFile(new_path, index);
     return new_path;
 }
