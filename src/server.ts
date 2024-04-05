@@ -1,4 +1,4 @@
-import express, { Response } from 'express';
+import express, { Request, Response } from 'express';
 import { engine } from "express-handlebars";
 import SpotifyWebApi from "spotify-web-api-node";
 import { readFile, writeFile } from "fs/promises"
@@ -33,16 +33,27 @@ const TOP_SONGS_REDIRECT_URI = `${HOSTNAME}/top-songs/`;
 const CALLBACK_REDIRECT_URI = `${HOSTNAME}/callback`;
 const AUTH_URI = `${HOSTNAME}/auth`;
 
+const LIGHT_THEME = {
+    ab_bkgrd: "black",
+    st_c: "#0d0d0d",
+    sa_c: "#111111"
+}
+const DARK_THEME = {
+    ab_bkgrd: "white",
+    st_c: "#f2f2f2",
+    sa_c: "#eeeeee"
+}
+
 const redirectToAuth = (redirectUri: string, res: Response) => {
     spotifyApi.setRedirectURI(redirectUri);
     const authorizeURL = spotifyApi.createAuthorizeURL(scopes, generateRandomString(16));
     res.redirect(authorizeURL);
 }
 
-const renderSong = (res: Response, options: any) => {
+const renderSong = (req: Request, res: Response, options: any) => {
     res.set("Content-Type", "image/svg+xml");
     // res.render("song.hbs", options);
-    processSvg("song", options).then((result) => { res.sendFile(result) });
+    processSvg("song", { ...options, ...(<string>(req.query.theme)==="light" ? LIGHT_THEME : DARK_THEME)}).then((result) => { res.sendFile(result) });
 }
 
 const processSvg = async (name: string, options: { [key: string]: number | string}) => {
@@ -117,7 +128,7 @@ app.get("/currently-playing", async (req, res) => {
             axios.get(item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
                 const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
 
-                renderSong(res, {
+                renderSong(req, res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: albumCover,
@@ -145,7 +156,7 @@ app.get("/playlist/:playlistID/:ix", async (req, res) => {
             axios.get(track ? track.album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
                 const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
 
-                renderSong(res, {
+                renderSong(req, res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: albumCover,
@@ -172,7 +183,7 @@ app.get("/top-songs/:ix", async (req, res) => {
             axios.get(item ? (<SpotifyApi.TrackObjectFull>item).album.images[0].url : DEFAULT_ALBUM_COVER_URL, { responseType: "arraybuffer" }).then((response) => {
                 const albumCover = "data:image/png;base64," + Buffer.from(response.data, "utf-8").toString("base64");
 
-                renderSong(res, {
+                renderSong(req, res, {
                     width: DISPLAY_WIDTH,
                     height: DISPLAY_HEIGHT,
                     albumCoverURL: albumCover,

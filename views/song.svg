@@ -23,7 +23,7 @@ svg:root {
     height: calc({{ height }}px - 2 * var(--p));
     width: calc({{ height }}px - 2 * var(--p)); /* {{ height }} is intentional */
     border-radius: 2px;
-    background-color: white;
+    background-color: {{ ab_bkgrd }};
     background-image: url({{ albumCoverURL }});
     background-size: contain;
     background-repeat: no-repeat;
@@ -51,13 +51,13 @@ span {
     font-weight: 600;
     margin-bottom: 5px;
     width: 100%;
-    color: #f5f5f5;
+    color: {{ st_c }};
 }
 .song-artist {
     font-size: 0.8rem;
     line-height: 0.8rem;
     width: 100%;
-    color: #eeeeee;
+    color: {{ sa_c }};
 }
 
 #ruler {
