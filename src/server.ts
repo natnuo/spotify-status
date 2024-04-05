@@ -75,8 +75,6 @@ app.get("/callback", (req, res) => {
     if (req.query) {
         spotifyApi.authorizationCodeGrant(<string>req.query.code).then(
             (data) => {
-                console.log(data.body);
-        
                 spotifyApi.setAccessToken(data.body.access_token);
                 spotifyApi.setRefreshToken(data.body.refresh_token);
 
@@ -84,6 +82,7 @@ app.get("/callback", (req, res) => {
                 timeout = setInterval(() => {
                     spotifyApi.refreshAccessToken().then(
                         (data) => {
+                            console.log("reloaded access token");
                             spotifyApi.setAccessToken(data.body.access_token);
                         },
                         (err) => {
@@ -104,6 +103,10 @@ app.get("/callback", (req, res) => {
 
 app.get("/auth", (req, res) => {
     redirectToAuth(CALLBACK_REDIRECT_URI, res);
+})
+
+app.get("/", (req, res) => {
+    res.send(`Authentication complete. If you were sent here from my GitHub page, <a href="https://github.com/natnuo">click here</a> to return.`)
 })
 
 app.get("/currently-playing", async (req, res) => {
