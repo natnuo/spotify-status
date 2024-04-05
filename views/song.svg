@@ -24,6 +24,7 @@ svg:root {
     width: calc({{ height }}px - 2 * var(--p)); /* {{ height }} is intentional */
     border-radius: 2px;
     background-color: {{ ab_bkgrd }};
+    background-image: url({{ albumCoverURL }});
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
