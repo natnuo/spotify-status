@@ -106,8 +106,7 @@ app.get("/auth", (req, res) => {
 })
 
 app.get("/", (req, res) => {
-    res.set("Content-Type", "text/html");
-    res.render(`Authentication complete. If you were sent here from my GitHub page, <a href="https://github.com/natnuo">click here</a> to return.`);
+    res.send(`Authentication complete. If you were sent here from my GitHub page, <a href="https://github.com/natnuo">click here</a> to return.`);
 })
 
 app.get("/currently-playing", async (req, res) => {
