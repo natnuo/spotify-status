@@ -26,8 +26,8 @@ Example: <code>http://ec2-107-20-43-170.compute-1.amazonaws.com/playlist/710ujhc
 <a href="https://github.com/natnuo/spotify-data">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="http://ec2-107-20-43-170.compute-1.amazonaws.com/playlist/710ujhc3yot5EfMNWB7sDK/1?theme=dark"  />
-    <source media="(prefers-color-scheme: light)" srcset="http://ec2-107-20-43-170.compute-1.amazonaws.com/playlist/710ujhc3yot5EfMNWB7sDK/1?theme=light  />
-    <img alt="Server error..." src=""  />
+    <source media="(prefers-color-scheme: light)" srcset="http://ec2-107-20-43-170.compute-1.amazonaws.com/playlist/710ujhc3yot5EfMNWB7sDK/1?theme=light"  />
+    <img alt="Not currently playing..." src=""  />
   </picture>
 </a>
 
